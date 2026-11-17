@@ -1,0 +1,9 @@
+id,employee,type,starts_on,ends_on,comment
+REQ-01,staff-01@example.test,sick,2026-11-26,2026-11-30,Recovering after surgery
+REQ-02,staff-02@example.test,personal,2026-12-01,2026-12-03,Moving to a new flat
+REQ-03,staff-03@example.test,sick,2026-12-08,2026-12-09,Flu
+REQ-04,staff-03@example.test,sick,2026-12-09,2026-12-10,Follow-up visit
+REQ-05,staff-04@example.test,sick,2026-12-14,2026-12-14,Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit. Please note the details of the visit.
+REQ-06,staff-05@example.test,personal,2027-01-04,2027-01-05,Extra days after the holidays
+REQ-07,staff-06@example.test,sick,2026-12-15,2026-12-15,Dentist
+REQ-08,staff-07@example.test,sick,2026-12-17,2026-12-16,Check-up

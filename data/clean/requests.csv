@@ -1,0 +1,4 @@
+id,employee,type,starts_on,ends_on,comment
+REQ-01,staff-01@example.test,sick,2026-11-18,2026-11-19,Doctor appointment
+REQ-02,staff-02@example.test,personal,2026-12-07,2026-12-07,Family matter
+REQ-03,staff-03@example.test,sick,2026-11-23,2026-11-24,Flu
