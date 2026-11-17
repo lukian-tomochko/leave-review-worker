@@ -1,6 +1,6 @@
 // Збирає options для query(): роль, інструменти, межі, бюджет — усе, що робить агента «працівником».
 import { createSdkMcpServer, tool, type Options } from "@anthropic-ai/claude-agent-sdk";
-import type { RunConfig } from "./config.ts";
+import { cleanEnv, type RunConfig } from "./config.ts";
 import { makeWriteGuard } from "./guard.ts";
 import { reviewToolResult } from "./data.ts";
 import { reviewJsonSchema } from "./report.ts";
@@ -63,6 +63,6 @@ export function buildOptions(
     maxTurns: config.maxTurns,
     maxBudgetUsd: config.maxBudgetUsd,
     // options.env ЗАМІНЮЄ середовище процесу повністю, тому спершу копія process.env.
-    env: { ...deps.baseEnv, ...config.extraEnv },
+    env: { ...cleanEnv(deps.baseEnv), ...config.extraEnv },
   };
 }

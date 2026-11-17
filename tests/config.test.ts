@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { describeConfig, resolveConfig } from "../src/config.ts";
+import { cleanEnv, describeConfig, resolveConfig } from "../src/config.ts";
 import { REVIEW_TOOL, buildOptions } from "../src/options.ts";
 
 test("без ключів — зрозуміла помилка, а не виклик", () => {
@@ -34,6 +34,40 @@ test("варіант B: OpenRouter — :free моделі, порожній ANTH
   }
   assert.ok(c.warnings.some((w) => /не підтримується/.test(w)));
   assert.ok(c.warnings.some((w) => /не стеля/.test(w)));
+});
+
+test("ключ OpenRouter не у форматі sk-or- чи в лапках — попередження без значення ключа", () => {
+  const notKey = resolveConfig({ WORKER_PROVIDER: "openrouter", OPENROUTER_API_KEY: "wrong-value-123" });
+  assert.ok(notKey.ok && notKey.config.warnings.some((w) => /sk-or-/.test(w)));
+  assert.ok(notKey.ok && !notKey.config.warnings.join(" ").includes("wrong-value-123"));
+  const quoted = resolveConfig({ WORKER_PROVIDER: "openrouter", OPENROUTER_API_KEY: '"sk-or-v1-abc"' });
+  assert.ok(quoted.ok && quoted.config.warnings.some((w) => /лапки/.test(w)));
+  const fine = resolveConfig({ WORKER_PROVIDER: "openrouter", OPENROUTER_API_KEY: "sk-or-v1-abc" });
+  assert.ok(fine.ok && !fine.config.warnings.some((w) => /sk-or-|лапки/.test(w)));
+});
+
+test("запуск зсередини сесії агента: чужа авторизація з середовища прибирається, ключ OpenRouter лишається", () => {
+  const inherited = {
+    PATH: "/bin",
+    ANTHROPIC_API_KEY: "key-a",
+    CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH: "1",
+    CLAUDE_CODE_OAUTH_SCOPES: "x",
+    CLAUDECODE: "1",
+    USE_LOCAL_OAUTH: "1",
+    ANTHROPIC_BASE_URL: "https://host.example",
+    ANTHROPIC_AUTH_TOKEN: "host-token",
+  };
+  assert.deepEqual(cleanEnv(inherited), { PATH: "/bin", ANTHROPIC_API_KEY: "key-a" });
+  const r = resolveConfig({ WORKER_PROVIDER: "openrouter", OPENROUTER_API_KEY: "sk-or-v1-abc" });
+  assert.ok(r.ok);
+  if (!r.ok) return;
+  const o = buildOptions(r.config, { cwd: process.cwd(), dataDir: "data", setName: "clean", log: () => {}, baseEnv: inherited });
+  assert.equal(o.env?.PATH, "/bin");
+  assert.equal(o.env?.CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH, undefined);
+  assert.equal(o.env?.USE_LOCAL_OAUTH, undefined);
+  assert.equal(o.env?.ANTHROPIC_BASE_URL, "https://openrouter.ai/api");
+  assert.equal(o.env?.ANTHROPIC_AUTH_TOKEN, "sk-or-v1-abc");
+  assert.equal(o.env?.ANTHROPIC_API_KEY, "");
 });
 
 test("платна модель у варіанті B — попередження", () => {

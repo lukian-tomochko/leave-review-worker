@@ -75,6 +75,9 @@ export function resolveConfig(env: Env): ConfigResult {
       "Безкоштовний рівень OpenRouter: 20 запитів/хв і 50 на добу на акаунт; один запуск агента — це кілька запитів.",
     ];
     if (!model.endsWith(":free")) warnings.push(`модель ${model} не :free — запити будуть платними`);
+    // Підказка без значення ключа: ключі OpenRouter починаються з «sk-or-»; лапки чи пробіли навколо ламають автентифікацію.
+    if (key !== key.trim() || /^["']|["']$/.test(key)) warnings.push("OPENROUTER_API_KEY має пробіли чи лапки навколо значення — приберіть їх у .env");
+    else if (!key.startsWith("sk-or-")) warnings.push("OPENROUTER_API_KEY не починається з «sk-or-»: схоже, це не ключ OpenRouter (перевірте .env)");
     return {
       ok: true,
       config: {
@@ -103,6 +106,19 @@ export function resolveConfig(env: Env): ConfigResult {
   }
 
   return { ok: false, error: `WORKER_PROVIDER має бути anthropic або openrouter, а не «${provider}»` };
+}
+
+/**
+ * Середовище для процесу Claude Code: копія базового без чужої авторизації.
+ * Якщо працівника запущено з сесії Claude Code (чи іншого агента), вона лишає в середовищі службові змінні
+ * (CLAUDE_CODE_*, USE_*_OAUTH, …); підпроцес вважає себе дочірнім сеансом хоста і шле токен хоста замість ключа
+ * OpenRouter — відповідь «401 this is not an OpenRouter API key». Тому прибираємо їх і чужі ANTHROPIC_BASE_URL /
+ * ANTHROPIC_AUTH_TOKEN. ANTHROPIC_API_KEY лишаємо: це ключ варіанта A з .env, а для OpenRouter його перекриває порожній.
+ */
+const FOREIGN_AUTH = /^(CLAUDE|USE_(LOCAL|STAGING)_OAUTH$|ANTHROPIC_(BASE_URL|AUTH_TOKEN)$)/i;
+
+export function cleanEnv(base: Env): Record<string, string | undefined> {
+  return Object.fromEntries(Object.entries(base).filter(([k]) => !FOREIGN_AUTH.test(k)));
 }
 
 /** Опис конфігурації для --dry-run: без значень ключів. */

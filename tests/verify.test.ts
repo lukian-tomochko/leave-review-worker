@@ -106,6 +106,11 @@ test("не та схема — проблеми зі шляхом поля", () 
   if (!v.ok) assert.ok(v.problems.some((p) => p.startsWith("схема: status")));
 });
 
+test("схема для Claude Code без $schema (інакше він відмовляє: no schema with key or ref draft/2020-12)", () => {
+  assert.equal("$schema" in reviewJsonSchema(), false);
+  assert.equal((reviewJsonSchema() as { type?: string }).type, "object");
+});
+
 test("схема не має поля рішення: працівник не може «затвердити» заявку", () => {
   const s = reviewJsonSchema() as { properties?: Record<string, unknown> };
   assert.deepEqual(Object.keys(s.properties ?? {}).sort(), ["items", "report_file", "status", "summary"]);

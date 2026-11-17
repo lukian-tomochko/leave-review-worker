@@ -1,0 +1,37 @@
+{
+  "set": "clean",
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "subtype": "success",
+  "num_turns": 4,
+  "total_cost_usd_estimate": 0.046185000000000004,
+  "guard_denials": [],
+  "verdict": {
+    "ok": true,
+    "report": {
+      "status": "ok",
+      "items": [
+        {
+          "id": "REQ-01",
+          "recommendation": "ready_for_decision",
+          "flags": [],
+          "note": "No flags raised; request is ready for manager decision."
+        },
+        {
+          "id": "REQ-02",
+          "recommendation": "ready_for_decision",
+          "flags": [],
+          "note": "No flags raised; request is ready for manager decision."
+        },
+        {
+          "id": "REQ-03",
+          "recommendation": "ready_for_decision",
+          "flags": [],
+          "note": "No flags raised; request is ready for manager decision."
+        }
+      ],
+      "report_file": "out/2026-11-17-review-clean.md",
+      "summary": "All three leave requests (REQ-01, REQ-02, REQ-03) have no computed flags and are ready for the manager's decision. No requests require attention."
+    }
+  }
+}

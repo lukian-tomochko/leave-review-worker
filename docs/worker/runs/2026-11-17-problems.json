@@ -1,0 +1,81 @@
+{
+  "set": "problems",
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "subtype": "success",
+  "num_turns": 4,
+  "total_cost_usd_estimate": 0.07429,
+  "guard_denials": [],
+  "verdict": {
+    "ok": true,
+    "report": {
+      "status": "needs_attention",
+      "items": [
+        {
+          "id": "REQ-01",
+          "recommendation": "needs_attention",
+          "flags": [
+            "on_closure"
+          ],
+          "note": "Request contains closure days (Staff day); 2 days counted towards balance."
+        },
+        {
+          "id": "REQ-02",
+          "recommendation": "needs_attention",
+          "flags": [
+            "over_balance"
+          ],
+          "note": "Needs 3 personal days but balance is only 1."
+        },
+        {
+          "id": "REQ-03",
+          "recommendation": "needs_attention",
+          "flags": [
+            "overlap"
+          ],
+          "note": "Overlaps with REQ-04."
+        },
+        {
+          "id": "REQ-04",
+          "recommendation": "needs_attention",
+          "flags": [
+            "overlap"
+          ],
+          "note": "Overlaps with REQ-03."
+        },
+        {
+          "id": "REQ-05",
+          "recommendation": "needs_attention",
+          "flags": [
+            "long_comment"
+          ],
+          "note": "Comment exceeds 500 characters."
+        },
+        {
+          "id": "REQ-06",
+          "recommendation": "needs_attention",
+          "flags": [
+            "on_closure"
+          ],
+          "note": "Request contains closure days (Winter break); 0 days counted towards balance."
+        },
+        {
+          "id": "REQ-07",
+          "recommendation": "ready_for_decision",
+          "flags": [],
+          "note": "No issues detected."
+        },
+        {
+          "id": "REQ-08",
+          "recommendation": "needs_attention",
+          "flags": [
+            "invalid_range"
+          ],
+          "note": "End date 2026-12-16 is earlier than start date 2026-12-17."
+        }
+      ],
+      "report_file": "out/2026-11-17-review-problems.md",
+      "summary": "7 of 8 requests need attention due to closure days, balance shortage, overlapping dates, long comment, or invalid date range; only REQ-07 is ready for decision."
+    }
+  }
+}

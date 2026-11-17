@@ -22,7 +22,10 @@ export type ReviewReport = z.infer<typeof ReviewReport>;
 
 /** JSON Schema для options.outputFormat — з тієї самої zod-схеми, щоб формат був в одному місці. */
 export function reviewJsonSchema(): Record<string, unknown> {
-  return z.toJSONSchema(ReviewReport) as Record<string, unknown>;
+  // Claude Code перевіряє схему власним валідатором, який не знає мета-схеми draft 2020-12: «no schema with key or ref
+  // https://json-schema.org/draft/2020-12/schema». Поле $schema лише оголошує діалект, тому його прибираємо.
+  const { $schema: _dialect, ...schema } = z.toJSONSchema(ReviewReport) as Record<string, unknown>;
+  return schema;
 }
 
 export type Verdict = { ok: true; report: ReviewReport } | { ok: false; problems: string[] };
